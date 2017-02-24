@@ -16,49 +16,90 @@
  * versions in the future.
  * 
  * @package     Faonni_Smtp
- * @copyright   Copyright (c) 2015 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
+ * @copyright   Copyright (c) 2017 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*/
+ */
 class Faonni_Smtp_Helper_Data 
 	extends Mage_Core_Helper_Abstract
 {
+    /**
+     * Enabled config path
+     */
+    const XML_SMTP_ENABLED = 'system/smtp/enabled';
+    	
+    /**
+     * Host config path
+     */
+    const XML_SMTP_HOST = 'system/smtp/host';
+    
+    /**
+     * Port config path
+     */
+    const XML_SMTP_PORT = 'system/smtp/port';
+    
+    /**
+     * Auth config path
+     */
+    const XML_SMTP_AUTH = 'system/smtp/auth';
+     
+    /**
+     * Ssl config path
+     */
+    const XML_SMTP_SSL = 'system/smtp/ssl';
+    
+    /**
+     * Username config path
+     */
+    const XML_SMTP_USER = 'system/smtp/user';
+    
+    /**
+     * Password config path
+     */
+    const XML_SMTP_PASS = 'system/smtp/pass';
+        
+    /**
+     * Check Smtp Transport functionality should be enabled
+     *
+     * @return bool
+     */    	
     public function isEnabled()
     {
-        return (bool) Mage::getStoreConfig('system/smtp_email/is_enabled');
+        return Mage::getStoreConfig(self::XML_SMTP_ENABLED);
     }
-
-    public function getConfigUsername()
+    
+    /**
+     * Retrieve configure smtp settings
+     *
+     * @return array
+     */
+    public function getConfig()
     {
-        return Mage::getStoreConfig('system/smtp_email/username');
+		return array(
+			'port'     => Mage::getStoreConfig(self::XML_SMTP_PORT),
+			'auth'     => Mage::getStoreConfig(self::XML_SMTP_AUTH),
+			'ssl'      => Mage::getStoreConfig(self::XML_SMTP_SSL),
+			'username' => Mage::getStoreConfig(self::XML_SMTP_USER),
+			'password' => Mage::getStoreConfig(self::XML_SMTP_PASS)
+		);        
+    } 
+    
+    /**
+     * Retrieve configure smtp host
+     *
+     * @return string
+     */    
+    public function getHost()
+    {
+        return Mage::getStoreConfig(self::XML_SMTP_HOST);
     }
-
-    public function getConfigPassword()
+    
+    /**
+     * Retrieve configure smtp port
+     *
+     * @return string
+     */  
+    public function getPort()
     {
-        return Mage::getStoreConfig('system/smtp_email/password');
-    }
-
-    public function getConfigAuth()
-    {
-        return Mage::getStoreConfig('system/smtp_email/auth');
-    }
-
-    public function getConfigSsl()
-    {
-        return Mage::getStoreConfig('system/smtp_email/ssl');
-    }
-
-    public function getConfigHost()
-    {
-        return Mage::getStoreConfig('system/smtp_email/host');
-    }
-
-    public function getConfigName()
-    {
-        return Mage::getStoreConfig('system/smtp_email/name');
-    }
-
-    public function getConfigPort()
-    {
-        return Mage::getStoreConfig('system/smtp_email/port');
+        return Mage::getStoreConfig(self::XML_SMTP_PORT);
     }
 }

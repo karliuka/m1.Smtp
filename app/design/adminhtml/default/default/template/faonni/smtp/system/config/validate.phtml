@@ -1,0 +1,63 @@
+<?php
+/**
+ * Faonni
+ *  
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade module to newer
+ * versions in the future.
+ * 
+ * @package     Faonni_Smtp
+ * @copyright   Copyright (c) 2017 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<script type="text/javascript">
+//<![CDATA[
+    function testSmtpConnection() {
+        var validationMessage = $('smtp_connection_validation_result');
+
+        params = {
+            host: $('system_smtp_host').value,
+            port: $('system_smtp_port').value,
+            ssl : $('system_smtp_ssl').value,
+            auth: $('system_smtp_auth').value,
+            user: $('system_smtp_user').value,
+            pass: $('system_smtp_pass').value,                        
+        };
+
+        new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
+            parameters: params,
+            onSuccess: function(response) {
+                result = '<?php echo Mage::helper('faonni_smtp')->jsQuoteEscape($this->__('Connection Failed')) ?>';
+                try {
+                    if (response.responseText.isJSON()) {
+                        response = response.responseText.evalJSON();
+                        result = response.message;
+                    }
+                    if (response.valid == 1) {
+                        validationMessage.removeClassName('hidden').removeClassName('smtp-validation-error').addClassName('smtp-validation-success')
+                    } else {
+                        validationMessage.removeClassName('hidden').removeClassName('smtp-validation-success').addClassName('smtp-validation-error')
+                    }					
+                } catch (e) {
+                    validationMessage.removeClassName('hidden').removeClassName('smtp-validation-success').addClassName('smtp-validation-error')
+                }
+                validationMessage.update(result);
+            }
+        });
+    }
+//]]>
+</script>
+<button onclick="javascript:testSmtpConnection(); return false;" class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>">
+    <span><?php echo $this->escapeHtml($this->getButtonLabel()) ?></span>
+</button>
+<div id="smtp_connection_validation_result" class="smtp-validation-result hidden"></div>

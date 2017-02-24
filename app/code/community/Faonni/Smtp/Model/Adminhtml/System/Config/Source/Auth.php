@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Faonni
  *  
@@ -20,15 +19,18 @@
  * @copyright   Copyright (c) 2017 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
--->
-<config>
-    <modules>
-        <Faonni_Smtp>
-            <active>true</active>
-            <codePool>community</codePool>
-            <depends>
-                <Mage_Core />
-            </depends>	            
-        </Faonni_Smtp>
-    </modules>
-</config>
+class Faonni_Smtp_Model_Adminhtml_System_Config_Source_Auth
+{
+    /**
+     * Return array of options as value-label pairs
+     *
+     * @return array
+     */   	
+    public function toOptionArray()
+    {
+        $helper = Mage::helper('faonni_smtp');
+        return array(
+            array('value' => 'login', 'label' => $helper->__('Login/Password')),
+        );
+    }
+}

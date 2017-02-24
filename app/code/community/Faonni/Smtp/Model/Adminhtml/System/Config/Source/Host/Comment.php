@@ -16,16 +16,21 @@
  * versions in the future.
  * 
  * @package     Faonni_Smtp
- * @copyright   Copyright (c) 2015 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
+ * @copyright   Copyright (c) 2017 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*/
-class Faonni_Smtp_Model_System_Config_Source_Ssl
+ */
+class Faonni_Smtp_Model_Adminhtml_System_Config_Source_Host_Comment 
+	extends Mage_Core_Model_Config_Data
 {
-    public function toOptionArray()
+    /**
+     * Retrieve element comment by element value
+     *
+     * @param Mage_Core_Model_Config_Element $element
+     * @param string $currentValue
+     * @return string
+     */	
+    public function getCommentText(Mage_Core_Model_Config_Element $element, $currentValue)
     {
-        return array(
-            array('value' => 'ssl', 'label' => Mage::helper('adminhtml')->__('SSL')),
-            array('value' => 'tls', 'label' => Mage::helper('adminhtml')->__('TLS')),
-        );
+        return Mage::helper('faonni_smtp')->__('Either host name or IP address.');
     }
-}
+} 

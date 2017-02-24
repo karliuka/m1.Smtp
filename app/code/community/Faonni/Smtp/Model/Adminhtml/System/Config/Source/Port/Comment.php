@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Faonni
  *  
@@ -20,15 +19,18 @@
  * @copyright   Copyright (c) 2017 Karliuka Vitalii(karliuka.vitalii@gmail.com) 
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
--->
-<config>
-    <modules>
-        <Faonni_Smtp>
-            <active>true</active>
-            <codePool>community</codePool>
-            <depends>
-                <Mage_Core />
-            </depends>	            
-        </Faonni_Smtp>
-    </modules>
-</config>
+class Faonni_Smtp_Model_Adminhtml_System_Config_Source_Port_Comment 
+	extends Mage_Core_Model_Config_Data
+{
+    /**
+     * Retrieve element comment by element value
+     *
+     * @param Mage_Core_Model_Config_Element $element
+     * @param string $currentValue
+     * @return string
+     */	
+    public function getCommentText(Mage_Core_Model_Config_Element $element, $currentValue)
+    {
+        return Mage::helper('faonni_smtp')->__('Usually is 25, 587 or 465. Please consult with your service provider.');
+    }
+} 
