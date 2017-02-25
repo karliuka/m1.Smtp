@@ -61,7 +61,12 @@ class Faonni_Smtp_Model_Core_Email_Template
         ini_set('smtp_port', $smtp->getPort());
 
         $mail = $this->getMail();
-		
+
+		$transport = new Faonni_Smtp_Model_Transport(
+			$smtp->getHost(), 
+			$smtp->getConfig()
+		);
+				
         $setReturnPath = Mage::getStoreConfig(
 			self::XML_PATH_SENDING_SET_RETURN_PATH
 		);		
@@ -78,20 +83,13 @@ class Faonni_Smtp_Model_Core_Email_Template
                 $returnPathEmail = null;
                 break;
         }
-
-		$transport = new Faonni_Smtp_Model_Transport(
-			$smtp->getHost(), 
-			$smtp->getConfig()
-		);
-		$mail->setDefaultTransport($transport);
-
+	
         if ($returnPathEmail !== null) {
-            $mailTransport = new Zend_Mail_Transport_Sendmail(
-				"-f" . $returnPathEmail
-			);
-            Zend_Mail::setDefaultTransport($mailTransport);
+            $mail->setReturnPath($returnPathEmail);
         }
-
+        
+		$mail->setDefaultTransport($transport);
+		
         foreach ($emails as $key => $email) {
             $mail->addTo(
 				$email, '=?utf-8?B?' . 
