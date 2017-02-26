@@ -1,0 +1,10 @@
+.smtp-validation-result {
+	display:inline-block;
+	margin-left:10px;
+} 
+.smtp-validation-error {
+	color:red;
+} 
+.smtp-validation-success {
+	color:green;
+}
