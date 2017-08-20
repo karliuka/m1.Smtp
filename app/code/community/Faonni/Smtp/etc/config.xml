@@ -77,6 +77,7 @@
                 <ssl>ssl</ssl>
                 <auth>login</auth>
                 <pass backend_model="adminhtml/system_config_backend_encrypted"/>
+                <image_attachment>1</image_attachment>
             </smtp>
         </system>
 </default>    

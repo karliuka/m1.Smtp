@@ -23,18 +23,31 @@ class Faonni_Smtp_Model_Core_Email_Template
 	extends Mage_Core_Model_Email_Template
 {
     /**
+     * Retrieve mail object instance
+     *
+     * @return Zend_Mail
+     */
+    public function getMail()
+    {
+        if (is_null($this->_mail)) {
+            $this->_mail = new Faonni_Smtp_Model_Mail('utf-8');
+        }
+        return $this->_mail;
+    }
+    
+    /**
      * Send mail to recipient
      *
      * @param array|string $email E-mail(s)
      * @param array|string|null $name receiver name(s)
      * @param array $variables template variables
-     * @return boolean
+     * @return bool
      **/ 
 	public function send($email, $name=null, array $variables=array())
     {
-        $smtp = Mage::helper('faonni_smtp');
+        $helper = Mage::helper('faonni_smtp');
 		
-        if (!$smtp->isEnabled()) {
+        if (!$helper->isEnabled()) {
             return parent::send($email, $name, $variables);
         }
 
@@ -57,14 +70,14 @@ class Faonni_Smtp_Model_Core_Email_Template
         $variables['email'] = reset($emails);
         $variables['name'] = reset($names);
 
-        ini_set('SMTP', $smtp->getHost());
-        ini_set('smtp_port', $smtp->getPort());
+        ini_set('SMTP', $helper->getHost());
+        ini_set('smtp_port', $helper->getPort());
 
         $mail = $this->getMail();
 
 		$transport = new Faonni_Smtp_Model_Transport(
-			$smtp->getHost(), 
-			$smtp->getConfig()
+			$helper->getHost(), 
+			$helper->getConfig()
 		);
 				
         $setReturnPath = Mage::getStoreConfig(
@@ -104,43 +117,6 @@ class Faonni_Smtp_Model_Core_Email_Template
         if($this->isPlain()) {
 			$mail->setBodyText($text);
 		} else {
-			preg_match_all(
-				"#(<img[^<>]+?src=['\"]([a-zA-Z0-9\.\/_:]+?)['\"][^<>]*?\>)#si", 
-				$text, 
-				$match, 
-				PREG_SET_ORDER
-			);
-			
-			if (is_array($match)) {
-				$mail->setType(Zend_Mime::MULTIPART_RELATED);
-				$images = array();
-				
-				foreach ($match as $image) {
-					$filename = str_replace(
-						Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB), 
-						'', 
-						$image[2]
-					);					
-					$imageId  = 'cid_' . md5_file($filename);
-					
-					if (isset($images[$imageId])) {
-						continue;
-					}
-					
-					if (is_readable($filename)) {							 
-						$at = $mail->createAttachment(
-							file_get_contents($filename)
-						);  
-						$at->type        = $this->getMimeType($filename);  
-						$at->disposition = Zend_Mime::DISPOSITION_INLINE;  
-						$at->encoding    = Zend_Mime::ENCODING_BASE64;  
-						$at->id          = $imageId;
-						
-						$text = str_replace($image[2],  'cid:' . $at->id,  $text);
-						$images[$imageId] = $image[2];
-					}
-				}
-			}
 			$mail->setBodyHTML($text);
         }
 
@@ -166,60 +142,5 @@ class Faonni_Smtp_Model_Core_Email_Template
         }
 		
         return true;
-    }
-
-    /**
-     * Attempt to get the content-type of a file based on the extension
-	 *
-     * @param  string $path
-     * @return string
-     */
-    public static function getMimeType($path)
-    {
-        $ext = substr(strrchr($path, '.'), 1);
-
-        if(!$ext) {
-            // shortcut
-            return 'binary/octet-stream';
-        }
-        switch (strtolower($ext)) {
-            case 'bmp':
-                $content_type = 'image/bitmap';
-                break;
-            case 'gif':
-                $content_type = 'image/gif';
-                break;
-            case 'iff':
-                $content_type = 'image/iff';
-                break;
-            case 'jb2':
-                $content_type = 'image/jb2';
-                break;
-            case 'jpg':
-            case 'jpe':
-            case 'jpeg':
-                $content_type = 'image/jpeg';
-                break;
-            case 'jpx':
-                $content_type = 'image/jpx';
-                break;
-            case 'png':
-                $content_type = 'image/png';
-                break;
-            case 'tif':
-            case 'tiff':
-                $content_type = 'image/tiff';
-                break;
-            case 'wbmp':
-                $content_type = 'image/vnd.wap.wbmp';
-                break;
-            case 'xbm':
-                $content_type = 'image/xbm';
-                break;
-            default:
-                $content_type = 'binary/octet-stream';
-                break;
-        }
-        return $content_type;
-    }    
+    }  
 }

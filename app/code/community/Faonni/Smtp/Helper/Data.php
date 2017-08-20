@@ -56,6 +56,11 @@ class Faonni_Smtp_Helper_Data
      * Password config path
      */
     const XML_SMTP_PASS = 'system/smtp/pass';
+    
+    /**
+     * Image attachment config path
+     */
+    const XML_SMTP_IMAGE_ATTACHMENT = 'system/smtp/image_attachment';    
         
     /**
      * Check Smtp Transport functionality should be enabled
@@ -66,6 +71,16 @@ class Faonni_Smtp_Helper_Data
     {
         return Mage::getStoreConfig(self::XML_SMTP_ENABLED);
     }
+    
+    /**
+     * Check Image attachment functionality should be enabled
+     *
+     * @return bool
+     */    	
+    public function isImageAttachment()
+    {
+        return Mage::getStoreConfig(self::XML_SMTP_IMAGE_ATTACHMENT);
+    }    
     
     /**
      * Retrieve configure smtp settings
